@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^user/', view.hello),
     url(r'^register/', view.register),
     url(r'^loadAll/', view.loadAll),
+    url(r'^userList', view.userList),
 ]

@@ -17,13 +17,7 @@ class LiUser(models.Model):
         return "LiUser(userName:" + self.userName + ",passWord:" + self.passWord + ",userId:" + self.userId + \
                ",phone:" + self.phone + ",sex:" + str(self.sex) + ",year:" + str(self.year) + ")"
 
-# CutPage的数据model，分页使用：limit、offset
+# CutPage的数据model，分页使用：页码、每页条数
 class CutPage(models.Model):
-    # 默认每页显示的条数
-    default_limit = 20
-    # url 中传入的显示数据条数的参数
-    limit_query_param = 'limit'
-    # url中传入的数据位置的参数
-    offset_query_param = 'offset'
-    # 最大每页显示条数
-    max_limit = None
+    pageIndex = models.IntegerField(default=1, blank=True)
+    pageNumber = models.IntegerField(default=20, blank=True)

@@ -1,5 +1,5 @@
 from rest_framework_dyn_serializer import serializers
-from .models import LiUser
+from .models import *
 
 
 # 对LiUser的解析
@@ -15,5 +15,5 @@ class UserSerializer(serializers.ModelSerializer):
 # 对LiUser的分页解析
 class UserListSerialize(serializers.ModelSerializer):
     class Meta:
-        model = LiUser
-        fields = ('mid','title')  # 'limit', 'offset'
+        model = CutPage
+        fields = ('pageIndex','pageNumber')
