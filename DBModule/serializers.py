@@ -9,11 +9,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiUser
         # 和"__all__"等价
-        fields = ('userName', 'passWord', 'userId', 'phone', 'sex', 'year')
+        fields = ('userName', 'passWord', 'userId', 'phone', 'sex', 'year', 'ctTime', 'upTime')
 
 
 # 对LiUser的分页解析
 class UserListSerialize(serializers.ModelSerializer):
     class Meta:
         model = CutPage
-        fields = ('pageIndex','pageNumber')
+        fields = ('pageIndex', 'pageNumber')

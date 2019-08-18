@@ -4,8 +4,9 @@ from DBModule.serializers import *
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from rest_framework import status
-from common.MyJsonResponse import JsonResponse
+from common.MyJsonResponse import *
 from django.core.paginator import Paginator
+from LiHui.base_util import *
 
 def hello(request):
     return HttpResponse("注册LiHui")
@@ -39,17 +40,7 @@ def userList(request):
         ser = UserSerializer(p.page(1), many=True)
         # 返回序列化的json数据
         return JsonResponse(ser.data)
-        users = LiUser.objects.values('mid', 'title').distinct()
-        obj = CutPage()
-        page_list = obj.paginate_queryset(users, request)
-        # 对数据序列化 普通序列化 显示的只是数据
-        ser = UserListSerialize(instance=page_list, many=True)  # instance：把对象序列化
-        response = obj.get_paginated_response(ser.data)
-        return response
     elif request.method == 'POST':  # 正确的分页姿势
-        # http: // 127.0.0.1:8000 / userList?pageIndex = 20
-        # http: // 127.0.0.1:8000 / userList?pageIndex = 20 & pageNumber = 20
-        # http: // 127.0.0.1:8000 / userList?pageIndex = 20 & pageNumber = 40
         pageData = JSONParser().parse(request)
         page = UserListSerialize(data=pageData)
         pageIndex = 1
@@ -64,9 +55,11 @@ def userList(request):
         if 0 < pageIndex <= allPage:
             ser = UserSerializer(p.page(pageIndex), many=True)
             # 返回序列化的json数据
-            return JsonResponse(ser.data)
+            jsonStr = baseResponse(data=ser.data)
+            return JsonResponse(jsonStr)
         else:
-            return JsonResponse('没有更多数据')
+            jsonStr = baseResponse(data={}, code=1050, msg='没有更多数据')
+            return JsonResponse(jsonStr)
 
 
 @csrf_exempt
@@ -78,9 +71,12 @@ def register(request):
         ser = UserSerializer(data=userData)
         if ser.is_valid():
             ser.save()
-            print(ser.Meta)
-            print(ser.data.get('userName'))
-            print(ser.data.items())
-            print(ser.Meta.model.userId)
-            return JsonResponse(ser.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                one = LiUser.objects.all().get(userId='1018')
+                print(one)
+            except Exception:
+                print('发生异常，找不到数据')
+            print('userId', ser.data.get('userId'))
+            jsonStr = baseResponse(ser.data, msg='注册成功')
+            return JsonResponse(jsonStr)
+        return JsonResponse(baseResponse(ser.errors, code=1101, msg='注册失败，请求数据不合法'))

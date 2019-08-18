@@ -120,7 +120,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False  # UTC时间，一般无法使用
 
 
 # Static files (CSS, JavaScript, Images)
